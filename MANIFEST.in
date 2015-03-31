@@ -1,0 +1,4 @@
+include AUTHORS
+include README.md
+include initial_surveys.json
+recursive-include defectDojo_engagement_survey/templates *.html

@@ -1,0 +1,7 @@
+{% overextends "base.html" %}
+{% block settings-dropdown-items %}
+{{ block.super }}
+{% if user.is_superuser %}
+    <li><a href="/admin/defectDojo_engagement_survey/"> <i class="fa fa-hospital-o fa-fw"> </i> Surveys </a></li>
+{% endif %}
+{% endblock %}

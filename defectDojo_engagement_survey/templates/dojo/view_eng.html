@@ -1,0 +1,13 @@
+{% overextends "dojo/view_eng.html" %}
+{% load survey_tags %}
+{% block content %}
+{{ block.super }}
+<hr />
+<h4 id="surveys">
+    Surveys &nbsp;
+    {% add_surveys eng %} 
+</h4>
+{% show_surveys eng %}
+<hr />
+
+{% endblock %}
