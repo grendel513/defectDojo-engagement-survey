@@ -33,5 +33,6 @@ setup(
         'django-polymorphic',
         'django-crispy-forms',
         'django-overextends',
+        'django_extensions',
         ]
 )
