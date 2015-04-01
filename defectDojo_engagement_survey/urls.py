@@ -4,6 +4,12 @@ Created on Feb 18, 2015
 @author: jay7958
 '''
 from django.conf.urls import patterns, url
+from django.contrib import admin
+from django.db.models.loading import cache as model_cache
+if not model_cache.ready:
+    model_cache.get_models()
+
+admin.autodiscover()
 
 urlpatterns = patterns(
     '',
