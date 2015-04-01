@@ -50,6 +50,12 @@ synchronize your database (Django >= 1.7):
 The Rackspace Security Engineering team has created an initial set of surveys, if you want to import them run:
 
     python manage.py loaddata /path_to/initial_surveys.json
+    
+**NOTE:** Before installing the fixtures, add a Question via the Django Admin.  Then use mysql to
+`select * from defectDojo_engagement_survey_question;`, this will give you the `polymorphic_ctype_id` for your system.
+
+Update the `initial_surveys.json` to reflect your ID number, this can be accomplised with `vim` with `:%s/70/NEW/g` where
+`NEW` is your `polymorphic_ctype_id`
 
 ## Configuration
 
