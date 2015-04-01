@@ -74,7 +74,7 @@ def answer_survey(request, eid, sid):
                          prefix=str(q.id),
                          answered_survey=survey,
                          question=q, form_tag=False)
-            for q in survey.survey.questions.all().get_real_instances()
+            for q in survey.survey.questions.all()
             ]
 
         questions_are_valid = []
@@ -138,7 +138,7 @@ def get_answered_questions(survey=None, read_only=False):
     questions = [q.get_form()(prefix=str(q.id),
                               answered_survey=survey,
                               question=q, form_tag=False)
-                 for q in survey.survey.questions.all().get_real_instances()
+                 for q in survey.survey.questions.all()
                  ]
     if read_only:
         for question in questions:
