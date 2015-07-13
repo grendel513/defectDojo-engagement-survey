@@ -34,14 +34,6 @@
         <div class="col-md-2">
             <div class="panel panel-default filters">
                 {% if filtered.form %}
-                    {% if request.user.is_staff %}
-                        <div class="panel-heading">Actions</div>
-                        <div class="panel-body centered">
-                            <a class="btn btn-sm btn-primary" href="#">
-                                Create Question
-                            </a>
-                        </div>
-                    {% endif %}
                     <div class="panel-heading">Filters</div>
                     <form method="get" class="panel-body">
                         {{ filtered.form.as_p }}
