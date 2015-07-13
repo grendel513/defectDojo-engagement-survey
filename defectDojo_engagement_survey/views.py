@@ -28,7 +28,7 @@ localtz = timezone('America/Chicago')
 
 
 @user_passes_test(lambda u: u.is_staff)
-def delete_survey(request, eid, sid):
+def delete_engagement_survey(request, eid, sid):
     engagement = get_object_or_404(Engagement, id=eid)
     survey = get_object_or_404(Answered_Survey, id=sid)
 
