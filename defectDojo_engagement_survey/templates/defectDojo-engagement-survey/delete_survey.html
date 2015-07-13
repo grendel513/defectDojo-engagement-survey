@@ -1,31 +1,37 @@
 {% extends "base.html" %}
 {% block content %}
-<h3> Delete {{survey}} Survey</h3>
-<p>
-    Deleting this Survey will remove any answers associated with it.  These relationships are listed below:
-</p>
-	<div class="danger-zone panel panel-danger">
+    <h3> Delete {{ survey }} Survey</h3>
+    <p>
+        Deleting this Survey will remove any answers associated with it. These relationships are listed below:
+    </p>
+    <div class="danger-zone panel panel-danger">
         <div class="panel-heading">
             <h3>Danger Zone</h3>
         </div>
-	    {% if questions and survey.completed  %}
-	        <form class="form form-read-only" method="post">{% csrf_token %}
-			    {% for question in questions %}
-			        {% include "defectDojo-engagement-survey/survey_fields.html" with form=question %}
-			    {% endfor %}
-			</form>
-	    {% else %}
-	        <p>No answers found.</p>  
-	    {% endif %}       
-	    <form class="form-horizontal" method="post">
+        {% if questions and survey.completed %}
+            <form class="form form-read-only" method="post">{% csrf_token %}
+                {% for question in questions %}
+                    {% include "defectDojo-engagement-survey/survey_fields.html" with form=question %}
+                {% endfor %}
+            </form>
+        {% else %}
+            <p>No answers found.</p>
+        {% endif %}
+        {% if rels|length > 1 %}
+            <ul class="left">{{ rels|unordered_list }}</ul>
+        {% else %}
+            <p>No relationships found.</p>
+        {% endif %}
+        <form class="form-horizontal" method="post">
             {% csrf_token %}
             {{ form }}
 
             <div class="form-group">
-                <button class="btn btn-danger" type="submit" name="delete_name" value="delete_survey">Delete Survey</button>
+                <button class="btn btn-danger" type="submit" name="delete_name" value="delete_survey">Delete Survey
+                </button>
             </div>
         </form>
-	</div>
+    </div>
     <br/>
     <br/>
 {% endblock %}

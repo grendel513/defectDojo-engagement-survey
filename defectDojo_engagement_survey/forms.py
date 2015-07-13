@@ -3,15 +3,16 @@ Created on Feb 18, 2015
 
 @author: jay7958
 '''
+import pickle
 from crispy_forms.bootstrap import InlineRadios, InlineCheckboxes
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout
 from django import forms
 from django.db.models import Count
+from dojo.forms import MultipleSelectWithPop
 
-from models import TextAnswer, ChoiceAnswer, Choice
-
-from .models import Engagement_Survey, Answered_Survey
+from .models import Engagement_Survey, Answered_Survey, TextAnswer, ChoiceAnswer, Choice, Question, TextQuestion, \
+    ChoiceQuestion
 
 
 # List of validator_name:func_name
@@ -117,7 +118,7 @@ class ChoiceQuestionForm(QuestionForm):
             if self.question.multichoice is False:
                 initial_choices = initial_choices[0]
 
-        #  default classes
+        # default classes
         widget = forms.RadioSelect
         field_type = forms.ChoiceField
         inline_type = InlineRadios
@@ -212,3 +213,134 @@ class Delete_Survey_Form(forms.ModelForm):
                    'engagement',
                    'answered_on',
                    'survey')
+
+
+class Delete_Eng_Survey_Form(forms.ModelForm):
+    id = forms.IntegerField(required=True,
+                            widget=forms.widgets.HiddenInput())
+
+    class Meta:
+        model = Engagement_Survey
+        exclude = ('name',
+                   'questions',
+                   'description',
+                   'active')
+
+
+class CreateSurveyForm(forms.ModelForm):
+    class Meta:
+        model = Engagement_Survey
+        exclude = ['questions']
+
+
+class EditSurveyQuestionsForm(forms.ModelForm):
+    questions = forms.ModelMultipleChoiceField(
+        Question.objects.all(),
+        required=True,
+        help_text="Select questions to include on this survey.  Field can be used to search available questions.",
+        widget=MultipleSelectWithPop(attrs={'size': '11'}))
+
+    class Meta:
+        model = Engagement_Survey
+        exclude = ['name', 'description', 'active']
+
+
+class CreateQuestionForm(forms.Form):
+    type = forms.ChoiceField(choices=(("---", "-----"), ("text", "Text"), ("choice", "Choice")))
+    order = forms.IntegerField(min_value=1, widget=forms.TextInput(attrs={'data-type': 'both'}))
+    optional = forms.BooleanField(help_text="If selected, user doesn't have to answer this question",
+                                  initial=False,
+                                  required=False,
+                                  widget=forms.CheckboxInput(attrs={'data-type': 'both'}))
+
+
+class CreateTextQuestionForm(forms.Form):
+    text = forms.CharField(widget=forms.Textarea(attrs={'data-type': 'text'}),
+                           label="Question Text",
+                           help_text="The actual question.")
+
+    class Meta:
+        model = TextQuestion
+        exclude = ['order', 'optional']
+
+
+class MultiWidgetBasic(forms.widgets.MultiWidget):
+    def __init__(self, attrs=None):
+        widgets = [forms.TextInput(attrs={'data-type': 'choice'}),
+                   forms.TextInput(attrs={'data-type': 'choice'}),
+                   forms.TextInput(attrs={'data-type': 'choice'}),
+                   forms.TextInput(attrs={'data-type': 'choice'}),
+                   forms.TextInput(attrs={'data-type': 'choice'}),
+                   forms.TextInput(attrs={'data-type': 'choice'})]
+        super(MultiWidgetBasic, self).__init__(widgets, attrs)
+
+    def decompress(self, value):
+        if value:
+            return pickle.loads(value)
+        else:
+            return [None, None, None, None, None, None]
+
+    def format_output(self, rendered_widgets):
+        return '<br/>'.join(rendered_widgets)
+
+
+class MultiExampleField(forms.fields.MultiValueField):
+    widget = MultiWidgetBasic
+
+    def __init__(self, *args, **kwargs):
+        list_fields = [forms.fields.CharField(required=True),
+                       forms.fields.CharField(required=True),
+                       forms.fields.CharField(required=False),
+                       forms.fields.CharField(required=False),
+                       forms.fields.CharField(required=False),
+                       forms.fields.CharField(required=False)]
+        super(MultiExampleField, self).__init__(list_fields, *args, **kwargs)
+
+    def compress(self, values):
+        return pickle.dumps(values)
+
+
+class CreateChoiceQuestionForm(forms.Form):
+    c_text = forms.CharField(widget=forms.Textarea(attrs={'data-type': 'choice'}),
+                             label="Question Text",
+                             help_text="The actual question.")
+    multichoice = forms.BooleanField(required=False,
+                                     initial=False,
+                                     widget=forms.CheckboxInput(attrs={'data-type': 'choice'}),
+                                     help_text="Can more than one choice can be selected?")
+
+    answer_choices = MultiExampleField(required=False, widget=MultiWidgetBasic(attrs={'data-type': 'choice'}))
+
+    class Meta:
+        model = ChoiceQuestion
+        exclude = ['order', 'optional', 'choices']
+
+
+class EditQuestionForm(forms.ModelForm):
+    class Meta:
+        model = Question
+        exclude = []
+
+
+class EditTextQuestionForm(EditQuestionForm):
+    class Meta:
+        model = TextQuestion
+        exclude = []
+
+
+class EditChoiceQuestionForm(EditQuestionForm):
+    choices = forms.ModelMultipleChoiceField(
+        Choice.objects.all(),
+        required=True,
+        help_text="Select choices to include on this question.  Field can be used to search available choices.",
+        widget=MultipleSelectWithPop(attrs={'size': '11'}))
+
+    class Meta:
+        model = ChoiceQuestion
+        exclude = []
+
+
+class AddChoicesForm(forms.ModelForm):
+    class Meta:
+        model = Choice
+        exclude = []

@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block content %}
+    <div class="row">
+        <div class="col-md-10">
+            {% if surveys %}
+                <div class="panel panel-default table-responsive">
+                    <table class="tablesorter-bootstrap table table-bordered table-condensed table-striped table-hover">
+                        <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Question Count</th>
+                            <th>Active</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for survey in surveys %}
+                            <tr>
+                                <td><a title="{{ survey.name }}"
+                                                      href="{% url 'edit_survey' survey.id %}">{{ survey.name }}</a>
+                                </td>
+                                <td class="nowrap">{{ survey.questions.all|length }}</td>
+                                <td>{{ survey.active }}</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% include "dojo/paging_snippet.html" with page=surveys %}
+            {% else %}
+                No surveys found.
+            {% endif %}
+        </div>
+        <div class="col-md-2">
+            <div class="panel panel-default filters">
+                {% if filtered.form %}
+                    {% if request.user.is_staff %}
+                        <div class="panel-heading">Actions</div>
+                        <div class="panel-body centered">
+                            <a class="btn btn-sm btn-primary" href="{% url 'create_survey' %}">
+                                Create Survey
+                            </a>
+                        </div>
+                    {% endif %}
+                    <div class="panel-heading">Filters</div>
+                    <form method="get" class="panel-body">
+                        {{ filtered.form.as_p }}
+                        <div class="centered">
+                            <input type="submit" class="btn btn-primary inline top" value="Apply"/><br/><br/>
+                            <a href="{% url 'survey' %}"> [Clear Filters] </a>
+                        </div>
+                    </form>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

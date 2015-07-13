@@ -7,6 +7,7 @@ from django.contrib.auth.models import User
 from django.db import models
 from django_extensions.db.models import TimeStampedModel
 from polymorphic import PolymorphicModel
+from auditlog.registry import auditlog
 
 from dojo.models import Engagement
 
@@ -126,6 +127,7 @@ class Engagement_Survey(models.Model):
     class Meta:
         verbose_name = "Engagement Survey"
         verbose_name_plural = "Engagement Surveys"
+        ordering = ('-active', 'name',)
 
     def __unicode__(self):
         return self.name
@@ -135,7 +137,7 @@ class Engagement_Survey(models.Model):
 class Answered_Survey(models.Model):
     # tie this to a specific engagement
     engagement = models.ForeignKey(Engagement, related_name='engagement',
-                                   null=False, blank=False, editable=True)
+                                   null=True, blank=False, editable=True)
     # what surveys have been answered
     survey = models.ForeignKey(Engagement_Survey)
     # who answered it
@@ -151,3 +153,9 @@ class Answered_Survey(models.Model):
 
     def __unicode__(self):
         return self.survey.name
+
+
+auditlog.register(Answer)
+auditlog.register(Answered_Survey)
+auditlog.register(Question)
+auditlog.register(Engagement_Survey)

@@ -1,7 +1,22 @@
 {% overextends "base.html" %}
 {% block settings-dropdown-items %}
-{{ block.super }}
-{% if user.is_superuser %}
-    <li><a href="/admin/defectDojo_engagement_survey/"> <i class="fa fa-hospital-o fa-fw"> </i> Surveys </a></li>
-{% endif %}
+    {{ block.super }}
+    {% if user.is_staff %}
+        <li><a href="{% url 'survey' %}"> <i class="fa fa-hospital-o fa-fw"> </i> Surveys </a></li>
+    {% endif %}
+{% endblock %}
+{% block sidebar-items %}
+    {{ block.super }}
+    {% if user.is_staff %}
+        <li>
+            <a href="#"><i class="fa fa-hospital-o fa-fw"> </i> Surveys<span
+                    class="glyphicon arrow"></span></a>
+            <ul class="nav nav-second-level">
+                <li><a href="{% url 'survey' %}">All Surveys </a></li>
+                <li><a href="{% url 'questions' %}">All Questions </a></li>
+
+            </ul>
+            <!-- /.nav-second-level -->
+        </li>
+    {% endif %}
 {% endblock %}
