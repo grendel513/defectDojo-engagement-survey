@@ -28,7 +28,7 @@ before installation.
 
 clone the repository:
 
-    git clone https://github.rackspace.com/jay7958/defectDojo-engagement-survey.git
+    git clone https://github.com/grendel513/defectDojo-engagement-survey.git
 
 run the install script:
     

@@ -9,12 +9,12 @@ def read(fname):
 
 setup(
     name="defectDojo_engagement_survey",
-    version="1.0",
-    description="TestTracker Engagement Survey",
+    version="1.0.1",
+    description="DefectDojo Engagement Survey",
     long_description=read('README.md'),
-    url="https://github.rackspace.com/jay7958/defectDojo_engagement_survey",
+    url="https://github.com/grendel513/defectDojo-engagement-survey",
     author="Jay Paz",
-    author_email="jay.paz@rackspace.com",
+    author_email="jay.paz@gmail.com",
     packages=find_packages(),
     include_package_data=True,
     classifiers=[
