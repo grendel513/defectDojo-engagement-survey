@@ -9,7 +9,7 @@
     {{ block.super }}
     {% if user.is_staff %}
         <li>
-            <a href="#"><i class="fa fa-hospital-o fa-fw"> </i> Surveys<span
+            <a href="#"><i class="fa fa-hospital-o fa-fw"> </i> <span>Surveys</span><span
                     class="glyphicon arrow"></span></a>
             <ul class="nav nav-second-level">
                 <li><a href="{% url 'survey' %}">All Surveys </a></li>

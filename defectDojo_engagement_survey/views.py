@@ -19,7 +19,7 @@ from pytz import timezone
 from defectDojo_engagement_survey.models import Question
 from defectDojo_engagement_survey.filters import SurveyFilter, QuestionFilter
 from dojo.models import Engagement
-from dojo.views import get_breadcrumbs, get_page_items
+from dojo.views import add_breadcrumb, get_page_items
 from .forms import Add_Survey_Form, Delete_Survey_Form, CreateSurveyForm, Delete_Eng_Survey_Form, \
     EditSurveyQuestionsForm, CreateQuestionForm, TextQuestionForm, ChoiceQuestionForm, CreateTextQuestionForm, \
     CreateChoiceQuestionForm, QuestionForm, EditTextQuestionForm, EditChoiceQuestionForm, AddChoicesForm
@@ -57,14 +57,12 @@ def delete_engagement_survey(request, eid, sid):
                                  messages.ERROR,
                                  'Unable to delete survey.',
                                  extra_tags='alert-danger')
+    add_breadcrumb(title="Delete " + survey.survey.name + " Survey", top_level=False, request=request)
     return render(request, 'defectDojo-engagement-survey/delete_survey.html',
                   {'survey': survey,
                    'form': form,
                    'engagement': engagement,
                    'questions': questions,
-                   'breadcrumbs': get_breadcrumbs(
-                       obj=engagement,
-                       title="Delete " + survey.survey.name + " Survey")
                    })
 
 
@@ -112,15 +110,12 @@ def answer_survey(request, eid, sid):
                                  messages.ERROR,
                                  'Survey has errors, please correct.',
                                  extra_tags='alert-danger')
-
+    add_breadcrumb(title="Answer " + survey.survey.name + " Survey", top_level=False, request=request)
     return render(request,
                   'defectDojo-engagement-survey/answer_survey.html',
                   {'survey': survey,
                    'engagement': engagement,
                    'questions': questions,
-                   'breadcrumbs': get_breadcrumbs(
-                       obj=engagement,
-                       title=survey.survey.name + " Survey")
                    })
 
 
@@ -130,15 +125,12 @@ def view_survey(request, eid, sid):
     engagement = get_object_or_404(Engagement, id=eid)
 
     questions = get_answered_questions(survey=survey, read_only=True)
-
+    add_breadcrumb(title=survey.survey.name + " Survey Responses", top_level=False, request=request)
     return render(request, 'defectDojo-engagement-survey/view_survey.html',
                   {'survey': survey,
                    'user': request.user,
                    'engagement': engagement,
                    'questions': questions,
-                   'breadcrumbs': get_breadcrumbs(
-                       obj=engagement,
-                       title=survey.survey.name + " Survey Responses"),
                    'name': survey.survey.name + " Survey Responses"
                    })
 
@@ -190,6 +182,7 @@ def add_survey(request, eid):
                                  'Survey could not be added.',
                                  extra_tags='alert-danger')
     form.fields["survey"].queryset = surveys
+    add_breadcrumb(title="Add Survey", top_level=False, request=request)
     return render(request, 'defectDojo-engagement-survey/add_survey.html',
                   {'surveys': surveys,
                    'user': user,
@@ -237,12 +230,12 @@ def edit_survey(request, sid):
                                  messages.ERROR,
                                  'Please correct any errors displayed below.',
                                  extra_tags='alert-danger')
-
+    add_breadcrumb(title="Edit Survey", top_level=False, request=request)
     return render(request, 'defectDojo-engagement-survey/create_survey.html',
                   {"survey": survey,
                    "form": form,
                    "name": "Edit Survey",
-                   'breadcrumbs': get_breadcrumbs(title="Edit Survey", user=request.user)})
+                   })
 
 
 @user_passes_test(lambda u: u.is_staff)
@@ -267,12 +260,12 @@ def delete_survey(request, sid):
                                      'Survey and relationships removed.',
                                      extra_tags='alert-success')
                 return HttpResponseRedirect(reverse('survey'))
-
+    add_breadcrumb(title="Delete Survey", top_level=False, request=request)
     return render(request, 'defectDojo-engagement-survey/delete_survey.html',
                   {'survey': survey,
                    'form': form,
                    'rels': rels,
-                   'breadcrumbs': get_breadcrumbs(title="Delete Survey " + survey.name, user=request.user)})
+                   })
 
 
 @user_passes_test(lambda u: u.is_staff)
@@ -298,12 +291,12 @@ def create_survey(request):
                                  messages.ERROR,
                                  'Please correct any errors displayed below.',
                                  extra_tags='alert-danger')
-
+    add_breadcrumb(title="Create Survey", top_level=False, request=request)
     return render(request, 'defectDojo-engagement-survey/create_survey.html',
                   {"survey": survey,
                    "form": form,
                    "name": "Create Survey",
-                   'breadcrumbs': get_breadcrumbs(title="Create Survey", user=request.user)})
+                   })
 
 
 @user_passes_test(lambda u: u.is_staff)
@@ -340,11 +333,12 @@ def edit_survey_questions(request, sid):
                                  messages.ERROR,
                                  'Survey questions not saved, please correct any errors displayed below.',
                                  extra_tags='alert-success')
+    add_breadcrumb(title="Update Survey Questions", top_level=False, request=request)
     return render(request, 'defectDojo-engagement-survey/edit_survey_questions.html',
                   {"survey": survey,
                    "form": form,
                    "name": "Update Survey Questions",
-                   'breadcrumbs': get_breadcrumbs(title="Update Survey Questions", user=request.user)})
+                   })
 
 
 @user_passes_test(lambda u: u.is_staff)
@@ -353,12 +347,12 @@ def survey(request):
     surveys = Engagement_Survey.objects.all()
     surveys = SurveyFilter(request.GET, queryset=surveys)
     paged_surveys = get_page_items(request, surveys, 25)
-
+    add_breadcrumb(title="All Surveys", top_level=True, request=request)
     return render(request, 'defectDojo-engagement-survey/list_surveys.html',
                   {"surveys": paged_surveys,
                    "filtered": surveys,
                    "name": "All Surveys",
-                   'breadcrumbs': get_breadcrumbs(title="All Surveys", user=user)})
+                   })
 
 
 @user_passes_test(lambda u: u.is_staff)
@@ -367,12 +361,12 @@ def questions(request):
     questions = Question.objects.all()
     questions = QuestionFilter(request.GET, queryset=questions)
     paged_questions = get_page_items(request, questions, 25)
-
+    add_breadcrumb(title="All Questions", top_level=False, request=request)
     return render(request, 'defectDojo-engagement-survey/list_questions.html',
                   {"questions": paged_questions,
                    "filtered": questions,
                    "name": "All Questions",
-                   'breadcrumbs': get_breadcrumbs(title="All Questions", user=user)})
+                   })
 
 
 @user_passes_test(lambda u: u.is_staff)
@@ -434,11 +428,9 @@ def create_question(request):
                        % (escape(created_question._get_pk_val()), escape(created_question.text))
                 resp += '<script type="text/javascript">window.close();</script>'
                 return HttpResponse(resp)
-
+    add_breadcrumb(title="Add Question", top_level=False, request=request)
     return render(request, 'defectDojo-engagement-survey/create_related_question.html', {
         'name': 'Add Question',
-        'breadcrumbs': get_breadcrumbs(title="Add Question",
-                                       user=request.user),
         'form': form,
         'textForm': textQuestionForm,
         'choiceForm': choiceQuestionFrom})
@@ -497,12 +489,10 @@ def edit_question(request, qid):
                                  messages.SUCCESS,
                                  'Question updated successfully.',
                                  extra_tags='alert-success')
-
+    add_breadcrumb(title="Edit Question", top_level=False, request=request)
     return render(request, 'defectDojo-engagement-survey/edit_question.html', {
         'name': 'Edit Question',
         'question': question,
-        'breadcrumbs': get_breadcrumbs(title="Edit Question",
-                                       user=request.user),
         'form': form})
 
 
@@ -525,9 +515,7 @@ def add_choices(request):
                            % (escape(choice._get_pk_val()), escape(choice.label))
                 resp += '<script type="text/javascript">window.close();</script>'
                 return HttpResponse(resp)
-
+    add_breadcrumb(title="Add Choice", top_level=False, request=request)
     return render(request, 'defectDojo-engagement-survey/add_choices.html', {
         'name': 'Add Choice',
-        'breadcrumbs': get_breadcrumbs(title="Add Choice",
-                                       user=request.user),
         'form': form})
