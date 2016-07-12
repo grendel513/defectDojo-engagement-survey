@@ -37,12 +37,12 @@ run the install script:
     
 synchronize your database (Django < 1.7 with south):
 
-    python manage.py schemamigration defectDojo-engagement-survey  --initial
-    python manage.py migrate defectDojo-engagement-survey
+    python manage.py schemamigration defectDojo_engagement_survey  --initial
+    python manage.py migrate defectDojo_engagement_survey
     
 synchronize your database (Django >= 1.7):
 
-    python manage.py makemigrations defectDojo-engagement-survey
+    python manage.py makemigrations defectDojo_engagement_survey
     python manage.py migrate
     
 ## Load initial fixtures
