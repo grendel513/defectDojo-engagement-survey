@@ -3,7 +3,7 @@ Created on Feb 18, 2015
 
 @author: jay7958
 '''
-from django.conf.urls import patterns, url
+from django.conf.urls import url
 from django.contrib import admin
 from django.apps import apps
 
@@ -12,7 +12,7 @@ if not apps.ready:
 
 admin.autodiscover()
 
-urlpatterns = patterns(
+urlpatterns = [
     '',
     url(r'^survey$',
         'defectDojo_engagement_survey.views.survey',
@@ -53,4 +53,4 @@ urlpatterns = patterns(
     url(r'^engagement/(?P<eid>\d+)/survey/(?P<sid>\d+)$',
         'defectDojo_engagement_survey.views.view_survey',
         name='view_survey'),
-)
+]
