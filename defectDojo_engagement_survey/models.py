@@ -6,7 +6,7 @@ Created on Feb 16, 2015
 from django.contrib.auth.models import User
 from django.db import models
 from django_extensions.db.models import TimeStampedModel
-from polymorphic import PolymorphicModel
+from polymorphic.models import PolymorphicModel
 from auditlog.registry import auditlog
 
 from dojo.models import Engagement
