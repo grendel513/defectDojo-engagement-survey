@@ -136,7 +136,7 @@ class Engagement_Survey(models.Model):
 # meant to be an answered survey tied to an engagement
 class Answered_Survey(models.Model):
     # tie this to a specific engagement
-    engagement = models.ForeignKey(Engagement, related_name='engagement',
+    engagement = models.ForeignKey(Engagement, related_name='es_as_engagement',
                                    null=True, blank=False, editable=True)
     # what surveys have been answered
     survey = models.ForeignKey(Engagement_Survey)
