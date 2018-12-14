@@ -13,7 +13,6 @@ if not apps.ready:
 admin.autodiscover()
 
 urlpatterns = [
-    '',
     url(r'^survey$',
         ddeng_views.survey,
         name='survey'),
