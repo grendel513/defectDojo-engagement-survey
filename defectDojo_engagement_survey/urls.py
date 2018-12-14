@@ -6,7 +6,7 @@ Created on Feb 18, 2015
 from django.conf.urls import url
 from django.contrib import admin
 from django.apps import apps
-
+from defectDojo_engagement_survey.views import *
 if not apps.ready:
     apps.get_models()
 
